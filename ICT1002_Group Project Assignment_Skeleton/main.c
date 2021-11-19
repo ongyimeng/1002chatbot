@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "chat1002.h"
-// GITHUB PUSH TEST
+// GITHUB PUSH TEST kc has smoll pp
 
 /* word delimiters */
 const char *delimiters = " ?\t\n";
