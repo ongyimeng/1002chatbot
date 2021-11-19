@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": true,
+      "cwd": "/Users/loling/Documents/Documents - Chee’s MacBook Air/SIT Y1/Trim 1.1/ICT1002 - Programming Fund/C/Project/1002chatbot/ICT1002_Group Project Assignment_Skeleton",
+      "environment": [],
+      "program": "/Users/loling/Documents/Documents - Chee’s MacBook Air/SIT Y1/Trim 1.1/ICT1002 - Programming Fund/C/Project/1002chatbot/ICT1002_Group Project Assignment_Skeleton/build/Debug/outDebug",
+      "internalConsoleOptions": "openOnSessionStart",
+      "MIMode": "gdb",
+      "externalConsole": true
+    }
+  ]
+}
