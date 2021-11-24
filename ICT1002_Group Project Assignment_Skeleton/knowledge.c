@@ -17,6 +17,9 @@
 #include <string.h>
 #include "chat1002.h"
 
+// INTENT_PTR head = NULL;
+ENTITY_PTR head;
+ENTITY_PTR end;
 /*
  * Get the response to a question.
  *
@@ -32,9 +35,16 @@
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
-
 	/* to be implemented */
-
+	ENTITY_PTR current = head;
+	while (current != NULL) {
+		if (compare_token(current->intent, intent) == 0) {
+				if (compare_token(current->entity, entity) == 0) {
+					snprintf(response, n, "%s", current->response);
+				}
+		}
+		current = current->next;
+	}
 	return KB_NOTFOUND;
 
 }
@@ -55,12 +65,38 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   KB_NOMEM, if there was a memory allocation failure
  *   KB_INVALID, if the intent is not a valid question word
  */
-int knowledge_put(const char *intent, const char *entity, const char *response) {
+char knowledge_put(char *intent, char *entity, char *response) {
+	ENTITY_PTR current = head;
+	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
+	strcpy(insert->intent, intent);
+	strcpy(insert->entity, entity);
+	strcpy(insert->response, response);
 
-	/* to be implemented */
-
-	return KB_INVALID;
-
+	if (current != NULL) {
+		while (current != NULL) {
+			if (compare_token(current->intent, intent) == 0) {
+				if (compare_token(current->entity, entity) == 0) {
+					strcpy(current->response, response);
+					break;
+				} else {
+					insert->next = current->next;
+					current->next = insert;
+					break;
+				}
+			} else {
+				if (current->next == NULL) {
+					current->next = insert;
+					break;
+				} else {
+					current = current->next;
+				}
+			}
+		}
+	} else if (current == NULL) {
+		head = insert;
+		current = head;
+	}
+	return 0;
 }
 
 

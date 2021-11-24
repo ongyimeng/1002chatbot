@@ -14,5 +14,31 @@
   "C_Cpp_Runner.cppStandard": "",
   "C_Cpp_Runner.excludeSearch": [],
   "C_Cpp_Runner.enableWarnings": true,
-  "C_Cpp_Runner.warningsAsError": false
+  "C_Cpp_Runner.warningsAsError": false,
+  "C_Cpp.dimInactiveRegions": false,
+  "files.associations": {
+    "*.py": "python",
+    "*.c": "c",
+    "__node_handle": "c",
+    "__bit_reference": "c",
+    "__functional_base": "c",
+    "algorithm": "c",
+    "bitset": "c",
+    "chrono": "c",
+    "deque": "c",
+    "__memory": "c",
+    "filesystem": "c",
+    "functional": "c",
+    "iterator": "c",
+    "limits": "c",
+    "optional": "c",
+    "ratio": "c",
+    "system_error": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "vector": "c",
+    "memory": "c",
+    "string": "c",
+    "unordered_map": "c"
+  }
 }

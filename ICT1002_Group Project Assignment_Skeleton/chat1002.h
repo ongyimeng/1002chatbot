@@ -27,6 +27,18 @@
 #define KB_NOTFOUND -1
 #define KB_INVALID  -2
 #define KB_NOMEM    -3
+#define WHO "Who"
+#define WHAT "What"
+#define WHERE "Where"
+
+typedef struct entity {
+  char intent[MAX_ENTITY];
+  char entity[MAX_ENTITY];
+  char response[MAX_RESPONSE];
+  struct entity *next;
+} ENTITY;
+
+typedef ENTITY *ENTITY_PTR;
  
 /* functions defined in main.c */
 int compare_token(const char *token1, const char *token2);
@@ -51,7 +63,7 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n);
 
 /* functions defined in knowledge.c */
 int knowledge_get(const char *intent, const char *entity, char *response, int n);
-int knowledge_put(const char *intent, const char *entity, const char *response);
+char knowledge_put( char *intent,  char *entity,  char *response);
 void knowledge_reset();
 int knowledge_read(FILE *f);
 void knowledge_write(FILE *f);

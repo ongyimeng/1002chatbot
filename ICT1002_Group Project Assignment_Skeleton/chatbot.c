@@ -90,8 +90,16 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
-	else if (chatbot_is_smalltalk(inv[0]))
+	else if (chatbot_is_smalltalk(inv[0])) {
+		// knowledge_put("Where", "SIT", "Dover");
+		// knowledge_put("What", "SIT", "Uni");
+		// knowledge_put("Who", "SIT", "It's a uni");
+		// knowledge_put("What", "SIT", "University");
+		// knowledge_put("Where", "NTU", "Pulau");
+		// knowledge_put("What", "Cat", "Pet");
+		// return knowledge_get("What", "Cat", response, n);
 		return chatbot_do_smalltalk(inc, inv, response, n);
+	}
 	else if (chatbot_is_load(inv[0]))
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
@@ -313,13 +321,11 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 int chatbot_is_smalltalk(const char *intent) {
 
 	/* to be implemented */
-
 	return compare_token(intent, "hello") == 0 ||
 		compare_token(intent, "hey") == 0 ||
 		compare_token(intent, "hi") == 0 ||
 		compare_token(intent, "greetings") == 0 ||
 		compare_token(intent, "goodbye") == 0 ;
-
 }
 
 
