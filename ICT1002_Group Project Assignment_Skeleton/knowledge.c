@@ -35,12 +35,17 @@ ENTITY_PTR end;
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
-	/* to be implemented */
+
+	if (chatbot_is_question(intent) == 0) {
+		snprintf(response, n, "I don't understand \"%s\".", intent);
+		return KB_INVALID;
+	}
 	ENTITY_PTR current = head;
 	while (current != NULL) {
 		if (compare_token(current->intent, intent) == 0) {
 				if (compare_token(current->entity, entity) == 0) {
-					snprintf(response, n, "%s", current->response);
+					snprintf(response, n, "%s", current->response);			// Response var will be set to the entity found
+					return KB_OK;
 				}
 		}
 		current = current->next;
