@@ -39,6 +39,10 @@
     "vector": "c",
     "memory": "c",
     "string": "c",
-    "unordered_map": "c"
+    "unordered_map": "c",
+    "__locale": "c",
+    "__hash_table": "c",
+    "__string": "c",
+    "string_view": "c"
   }
 }

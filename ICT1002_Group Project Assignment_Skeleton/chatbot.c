@@ -41,7 +41,9 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "chat1002.h"
 
 
@@ -91,14 +93,14 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
 	else if (chatbot_is_smalltalk(inv[0])) {
-		// knowledge_put("Where", "SIT", "Dover");
-		// knowledge_put("What", "SIT", "Uni");
-		// knowledge_put("Who", "SIT", "It's a uni");
-		// knowledge_put("What", "SIT", "University");
-		// knowledge_put("Where", "NTU", "Pulau");
-		// knowledge_put("What", "Cat", "Pet");
-		// return knowledge_get("What", "Cat", response, n);
-		return chatbot_do_smalltalk(inc, inv, response, n);
+		knowledge_put("Where", "SIT", "Dover");
+		knowledge_put("What", "SIT", "Uni");
+		knowledge_put("Who", "SIT", "It's a uni");
+		knowledge_put("What", "SIT", "University");
+		knowledge_put("Where", "NTU", "Pulau");
+		knowledge_put("What", "Cat", "Pet");
+		return knowledge_get("Where", "SIT", response, n);
+		// return chatbot_do_smalltalk(inc, inv, response, n);
 	}
 	else if (chatbot_is_load(inv[0]))
 		return chatbot_do_load(inc, inv, response, n);
@@ -201,7 +203,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 int chatbot_is_question(const char *intent) {
 
 	/* to be implemented */
-	char intentqns[3][6] = {"what", "where", "who"};
+	char intentqns[3][6] = { WHAT, WHERE, WHO };
 	for (int i = 0; i < 3; i++) {
 		if (compare_token(intentqns[i], intent) == 0) {
 			return 1;
@@ -225,9 +227,56 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-
-	/* to be implemented */
-
+	int index, find_entity = 0;
+	char *entity;
+	if (inc > 1) {
+		if (!compare_token(inv[1], "is") || !compare_token(inv[1], "are")){
+			index = 2;
+		} else {
+			index = 1;
+		}
+		for (int i = index; i < inc; i++) {
+			strcat(entity, inv[i]);
+			if (i != inc - 1){
+				strcat(entity, " ");
+			}
+		}
+		find_entity = knowledge_get(inv[0], entity, response, n);
+	} else {
+		snprintf(response, n, "No entity was found.");
+	}
+	if (find_entity == KB_NOTFOUND) {
+		// Rebuild question to be displayed
+		char *question;
+		char *qn_entity;
+		question = (char *)malloc(MAX_RESPONSE);
+		if (question == NULL) {
+			snprintf(response, n, "Insfficient memory space");
+			return 1;
+		}
+		for (int i = 0; i < inc; i++) {
+			strcat(qn_entity, inv[i]);
+			if (i != inc - 1){
+				strcat(qn_entity, " ");
+			}
+		}
+		strcat(question, qn_entity);
+		// Capitalise first word in question
+		question[0] = toupper(question[0]);
+		char ans[MAX_RESPONSE];
+		prompt_user(ans, MAX_RESPONSE, "I don't know. %s?", question);
+		find_entity = knowledge_put(inv[0], entity , ans);
+		if (find_entity == KB_OK){
+			snprintf(response, n, "Thank you.");
+		} else if (find_entity == KB_NOMEM) {
+			snprintf(response, n, "Insfficient memory space");
+		} else if (find_entity == KB_INVALID) {
+			snprintf(response, n, "Invalid intent specified");
+		}
+		free(question);
+		free(qn_entity);
+	}
+	free(entity);
 	return 0;
 
 }
@@ -342,7 +391,7 @@ int chatbot_is_smalltalk(const char *intent) {
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
 
 	/* to be implemented */
-	if (compare_token(inv[0], "goodbye") == 0 ){
+	if (compare_token(inv[0], "goodbye") == 0 ) {
 		snprintf(response, n, "Goodbye!");
 		return 1;
 	} 
@@ -351,3 +400,13 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
 	return 0;
 	
 }
+
+// int concate(char *inc, char *inv, char *index, char *entity) {
+// 	for (int i = index; i < inc; i++) {
+// 			strcat(entity, inv[i]);
+// 			if (i != inc - 1){
+// 				strcat(entity, " ");
+// 			}
+// 		}
+// 	return 0;
+// }

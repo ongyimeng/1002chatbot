@@ -47,12 +47,12 @@ int main(int argc, char *argv[]) {
 
 			/* split it into words */
 			inc = 0;
-			inv[inc] = strtok(input, delimiters);
+			inv[inc] = strtok(input, delimiters);								// Tokenise the words based on the delimiters
 			while (inv[inc] != NULL) {
 
 				/* remove trailing punctuation */
-				len = strlen(inv[inc]);
-				while (len > 0 && ispunct(inv[inc][len - 1])) {
+				len = strlen(inv[inc]);														// Variable len is the length of the words iterated 
+				while (len > 0 && ispunct(inv[inc][len - 1])) {		// Last letter of the word is a punctuation
 					inv[inc][len - 1] = '\0';
 					len--;
 				}
