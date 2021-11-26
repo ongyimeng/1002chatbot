@@ -37,7 +37,6 @@ ENTITY_PTR end;
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 
 	if (chatbot_is_question(intent) == 0) {
-		snprintf(response, n, "I don't understand \"%s\".", intent);
 		return KB_INVALID;
 	}
 	ENTITY_PTR current = head;
