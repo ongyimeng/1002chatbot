@@ -38,9 +38,7 @@ ENTITY_PTR end;
 int knowledge_get(const char *intent, const char *entity, char *response, int n)
 {
 
-	if (chatbot_is_question(intent) == 0)
-	{
-		snprintf(response, n, "I don't understand \"%s\".", intent);
+	if (chatbot_is_question(intent) == 0) {
 		return KB_INVALID;
 	}
 	ENTITY_PTR current = head;
@@ -149,7 +147,6 @@ int knowledge_read(FILE *f)
 		{
 			if (!isalpha(readline[i]) && !strstr(readline, "="))
 			{
-
 				char *linePtr = strtok(readline, "[");
 				char *endLinePtr = strtok(linePtr, "]");
 

@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 		/* invoke the chatbot */
 		done = chatbot_main(inc, inv, output, MAX_RESPONSE);
 		printf("%s: %s\n", chatbot_botname(), output);
-
+		
 	} while (!done);
 
 	return 0;

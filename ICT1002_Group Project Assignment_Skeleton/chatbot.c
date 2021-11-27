@@ -91,15 +91,13 @@ int chatbot_main(int inc, char *inv[], char *response, int n)
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
-	else if (chatbot_is_smalltalk(inv[0]))
-	{
-		// knowledge_put("Where", "SIT", "Dover");
-		// knowledge_put("What", "SIT", "Uni");
-		// knowledge_put("Who", "SIT", "It's a uni");
-		// knowledge_put("What", "SIT", "University");
-		// knowledge_put("Where", "NTU", "Pulau");
-		// knowledge_put("What", "Cat", "Pet");
-		// return knowledge_get("Where", "SIT", response, n);
+	else if (chatbot_is_smalltalk(inv[0])) {
+		knowledge_put("Where", "SIT", "Dover");
+		knowledge_put("What", "SIT", "Uni");
+		knowledge_put("Who", "SIT", "It's a uni");
+		knowledge_put("What", "SIT", "University");
+		knowledge_put("Where", "NTU", "Pulau");
+		knowledge_put("What", "Cat", "Pet");
 		return chatbot_do_smalltalk(inc, inv, response, n);
 	}
 	else if (chatbot_is_load(inv[0]))
@@ -237,75 +235,64 @@ int chatbot_is_question(const char *intent)
  * Returns:
  *   0 (the chatbot always continues chatting after a question)
  */
-int chatbot_do_question(int inc, char *inv[], char *response, int n)
-{
+int chatbot_do_question(int inc, char *inv[], char *response, int n) {
+	// knowledge_put("What", "SIT", response);
+	// response = "";
 	int index, find_entity = 0;
-	char *entity;
-	if (inc > 1)
-	{
-		if (!compare_token(inv[1], "is") || !compare_token(inv[1], "are"))
-		{
-			index = 2;
-		}
-		else
-		{
-			index = 1;
-		}
-		for (int i = index; i < inc; i++)
-		{
-			strcat(entity, inv[i]);
-			if (i != inc - 1)
-			{
-				strcat(entity, " ");
-			}
-		}
-		find_entity = knowledge_get(inv[0], entity, response, n);
+	char *user_entity;
+	user_entity = (char *)malloc(MAX_ENTITY);
+	char *answer;
+	int try_put_knowledge;
+	if (user_entity == NULL) {
+		snprintf(response, n, "Insfficient memory space");
+		return 1;
 	}
-	else
-	{
+	if (inc > 1) {
+		if (!compare_token(inv[1], "is") || !compare_token(inv[1], "are")) {
+			index = 2;														// Setting the index to 2 (3rd word) to skip the is/are which is the 2nd word. 
+		} else {
+			index = 1;														// Setting the index to 1 (2nd word) if the words are either not "is" or "are".
+		}
+		if (inv[index]) {
+			for (int i = index; i < inc; i++) {
+				strcat(user_entity, inv[i]);
+				if (i != inc - 1) {									// If current word is not the last word, add a space
+					strcat(user_entity, " ");
+				}
+			}
+		} else {
+			snprintf(response, n, "No entity was found.");
+		}
+		find_entity = knowledge_get(inv[0], user_entity, response, n);
+	} else {
 		snprintf(response, n, "No entity was found.");
 	}
-	if (find_entity == KB_NOTFOUND)
-	{
-		// Rebuild question to be displayed
-		char *question;
-		char *qn_entity;
-		question = (char *)malloc(MAX_RESPONSE);
-		if (question == NULL)
-		{
-			snprintf(response, n, "Insfficient memory space");
-			return 1;
+	
+	if (find_entity == KB_NOTFOUND) {
+		char *question = (char *)malloc(MAX_RESPONSE);
+		for (int i = 0; i < inc; i++) {
+			strcat(question, inv[i]);
+				if (i != inc - 1) {									// If current word is not the last word, add a space
+					strcat(question, " ");
+				}
 		}
-		for (int i = 0; i < inc; i++)
-		{
-			strcat(qn_entity, inv[i]);
-			if (i != inc - 1)
-			{
-				strcat(qn_entity, " ");
-			}
-		}
-		strcat(question, qn_entity);
-		// Capitalise first word in question
-		question[0] = toupper(question[0]);
-		char ans[MAX_RESPONSE];
-		prompt_user(ans, MAX_RESPONSE, "I don't know. %s?", question);
-		find_entity = knowledge_put(inv[0], entity, ans);
-		if (find_entity == KB_OK)
-		{
+		strcat(question, user_entity);
+		// snprintf(response, n, "I don't know. %s", question);
+		prompt_user(answer, MAX_RESPONSE, "I don't know. %s?", question);
+		// printf("%s", answer);
+		try_put_knowledge = knowledge_put(inv[0], user_entity, answer);
+		// knowledge_get(inv[0], user_entity, response, n);
+		if (try_put_knowledge == KB_OK) {
 			snprintf(response, n, "Thank you.");
-		}
-		else if (find_entity == KB_NOMEM)
-		{
+		} else if (try_put_knowledge == KB_NOMEM) {
 			snprintf(response, n, "Insfficient memory space");
-		}
-		else if (find_entity == KB_INVALID)
-		{
+		} else if (try_put_knowledge == KB_INVALID) {
 			snprintf(response, n, "Invalid intent specified");
 		}
 		free(question);
-		free(qn_entity);
+		// free(answer);
 	}
-	free(entity);
+	free(user_entity);
 	return 0;
 }
 
