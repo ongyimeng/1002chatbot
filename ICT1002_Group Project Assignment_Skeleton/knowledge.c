@@ -19,8 +19,8 @@
 #include "chat1002.h"
 
 // INTENT_PTR head = NULL;
-ENTITY_PTR head;
-ENTITY_PTR end;
+ENTITY_PTR head = NULL;
+ENTITY_PTR end = NULL;
 /*
  * Get the response to a question.
  *
@@ -38,7 +38,8 @@ ENTITY_PTR end;
 int knowledge_get(const char *intent, const char *entity, char *response, int n)
 {
 
-	if (chatbot_is_question(intent) == 0) {
+	if (chatbot_is_question(intent) == 0)
+	{
 		return KB_INVALID;
 	}
 	ENTITY_PTR current = head;
@@ -76,48 +77,50 @@ char knowledge_put(char *intent, char *entity, char *response)
 {
 	ENTITY_PTR current = head;
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
-	strcpy(insert->intent, intent);
-	strcpy(insert->entity, entity);
-	strcpy(insert->response, response);
+	if (insert != NULL) {
+		strcpy(insert->intent, intent);
+		strcpy(insert->entity, entity);
+		strcpy(insert->response, response);
+	} else {
+		return KB_NOMEM;
+	}
 
-	if (current != NULL)
+	if (head == NULL) {
+		head = insert;
+	} else {
+		current = head;
+	}
+
+	while (current != NULL)
 	{
-		while (current != NULL)
+		if (compare_token(current->intent, intent) == 0)
 		{
-			if (compare_token(current->intent, intent) == 0)
+			if (compare_token(current->entity, entity) == 0)
 			{
-				if (compare_token(current->entity, entity) == 0)
-				{
-					strcpy(current->response, response);
-					break;
-				}
-				else
-				{
-					insert->next = current->next;
-					current->next = insert;
-					break;
-				}
+				strcpy(current->response, response);
+				break;
 			}
 			else
 			{
-				if (current->next == NULL)
-				{
-					current->next = insert;
-					break;
-				}
-				else
-				{
-					current = current->next;
-				}
+				insert->next = current->next;
+				current->next = insert;
+				break;
+			}
+		}
+		else
+		{
+			if (current->next == NULL)
+			{
+				current->next = insert;
+				break;
+			}
+			else
+			{
+				current = current->next;
 			}
 		}
 	}
-	else if (current == NULL)
-	{
-		head = insert;
-		current = head;
-	}
-	return 0;
+	return KB_OK;
 }
 
 /*

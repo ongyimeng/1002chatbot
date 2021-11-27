@@ -91,9 +91,8 @@ int chatbot_main(int inc, char *inv[], char *response, int n)
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
-	else if (chatbot_is_smalltalk(inv[0])) {
+	else if (chatbot_is_smalltalk(inv[0]))
 		return chatbot_do_smalltalk(inc, inv, response, n);
-	}
 	else if (chatbot_is_load(inv[0]))
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
@@ -200,8 +199,6 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
  */
 int chatbot_is_question(const char *intent)
 {
-
-	/* to be implemented */
 	char intentqns[3][6] = {WHAT, WHERE, WHO};
 	for (int i = 0; i < 3; i++)
 	{
@@ -227,12 +224,10 @@ int chatbot_is_question(const char *intent)
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	// knowledge_put("What", "SIT", response);
-	// response = "";
 	int index, find_entity = 0;
 	char *user_entity;
 	user_entity = (char *)malloc(MAX_ENTITY);
-	char *answer;
+	char *answer = (char *)malloc(MAX_RESPONSE);
 	int try_put_knowledge;
 	if (user_entity == NULL) {
 		snprintf(response, n, "Insfficient memory space");
@@ -261,13 +256,13 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	if (find_entity == KB_NOTFOUND) {
 		char *question = (char *)malloc(MAX_RESPONSE);
-		for (int i = 0; i < inc; i++) {
+		for (int i = 0; i < index; i++) {
 			strcat(question, inv[i]);
 				if (i != inc - 1) {									// If current word is not the last word, add a space
 					strcat(question, " ");
 				}
 		}
-		strcat(question, user_entity);
+		strcat(question, user_entity);					
 		// snprintf(response, n, "I don't know. %s", question);
 		prompt_user(answer, MAX_RESPONSE, "I don't know. %s?", question);
 		// printf("%s", answer);
