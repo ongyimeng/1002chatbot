@@ -179,29 +179,29 @@ int knowledge_read(FILE *f)
 			{
 				char *entity = strtok(readline, "=");
 				char *reply = strtok(NULL, "=");
-				if (readIntent == 0)
+
+				switch (readIntent)
 				{
+				case 0:
 					knowledge_put("who", entity, reply);
-				}
-				else if (readIntent == 1)
-				{
+					break;
+				case 1:
 					knowledge_put("what", entity, reply);
-				}
-				else if (readIntent == 2)
-				{
+					break;
+				case 2:
 					knowledge_put("where", entity, reply);
-				}
-				else if (readIntent == 3)
-				{
+					break;
+				case 3:
 					knowledge_put("when", entity, reply);
-				}
-				else if (readIntent == 4)
-				{
+					break;
+				case 4:
 					knowledge_put("why", entity, reply);
-				}
-				else if (readIntent == 5)
-				{
+					break;
+				case 5:
 					knowledge_put("how", entity, reply);
+					break;
+				default:
+					break;
 				}
 			}
 		}
