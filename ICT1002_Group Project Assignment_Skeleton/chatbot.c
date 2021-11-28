@@ -230,50 +230,47 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	char *answer = (char *)malloc(MAX_RESPONSE);
 	int try_put_knowledge;
 	if (user_entity == NULL) {
-		snprintf(response, n, "Insfficient memory space");
+		snprintf(response, n, "Insfficient memory space");									// No space means your computer is lousy, and has run out of space
 		return 1;
 	}
-	if (inc > 1) {
+	if (inc > 1) {																												// If the sentence is more than a word
 		if (!compare_token(inv[1], "is") || !compare_token(inv[1], "are")) {
-			index = 2;														// Setting the index to 2 (3rd word) to skip the is/are which is the 2nd word. 
+			index = 2;																												// Setting the index to 2 (3rd word) to skip "is/are" which is the 2nd word. 
 		} else {
-			index = 1;														// Setting the index to 1 (2nd word) if the words are either not "is" or "are".
+			index = 1;																												// Setting the index to 1 (2nd word) if the words are neither "is" nor "are".
 		}
 		if (inv[index]) {
 			for (int i = index; i < inc; i++) {
 				strcat(user_entity, inv[i]);
-				if (i != inc - 1) {									// If current word is not the last word, add a space
+				if (i != inc - 1) {																							// If current word is not the last word, add a space
 					strcat(user_entity, " ");
 				}
 			}
 		} else {
 			snprintf(response, n, "No entity was found.");
 		}
-		find_entity = knowledge_get(inv[0], user_entity, response, n);
+		find_entity = knowledge_get(inv[0], user_entity, response, n);			// Get entity
 	} else {
 		snprintf(response, n, "No entity was found.");
 	}
 	
-	if (find_entity == KB_NOTFOUND) {
-		char *question = (char *)malloc(MAX_RESPONSE);
-		for (int i = 0; i < index; i++) {
+	if (find_entity == KB_NOTFOUND) {																			// If there was no record of that entity
+		char *question = (char *)malloc(MAX_RESPONSE);											
+		for (int i = 0; i < index; i++) {																		// Loop through the words in the original question and add it to question var
 			strcat(question, inv[i]);
-				if (i != inc - 1) {									// If current word is not the last word, add a space
+				if (i != inc - 1) {																							// If current word is not the last word, add a space
 					strcat(question, " ");
 				}
 		}
-		strcat(question, user_entity);					
-		// snprintf(response, n, "I don't know. %s", question);
-		prompt_user(answer, MAX_RESPONSE, "I don't know. %s?", question);
-		// printf("%s", answer);
-		try_put_knowledge = knowledge_put(inv[0], user_entity, answer);
-		// knowledge_get(inv[0], user_entity, response, n);
-		if (try_put_knowledge == KB_OK) {
+		strcat(question, user_entity);																			// Concatenate entity word to the back of the question variable from above
+		prompt_user(answer, MAX_RESPONSE, "I don't know. %s?", question);		// Ask user what is the answer
+		try_put_knowledge = knowledge_put(inv[0], user_entity, answer);			// Puts user answer into the knowledge base linked list
+		if (try_put_knowledge == KB_OK) {																		// If successful, say thank you ;)
 			snprintf(response, n, "Thank you.");
 		} else if (try_put_knowledge == KB_NOMEM) {
-			snprintf(response, n, "Insfficient memory space");
+			snprintf(response, n, "Insfficient memory space");								// Not enough space, your computer must be very old 
 		} else if (try_put_knowledge == KB_INVALID) {
-			snprintf(response, n, "Invalid intent specified");
+			snprintf(response, n, "Invalid intent specified");								// We do not understand your intent
 		}
 		free(question);
 		// free(answer);
@@ -367,6 +364,7 @@ int chatbot_is_smalltalk(const char *intent)
 	return compare_token(intent, "hello") == 0 ||
 		   compare_token(intent, "hey") == 0 ||
 		   compare_token(intent, "hi") == 0 ||
+		   compare_token(intent, "wassup") == 0 ||
 		   compare_token(intent, "greetings") == 0 ||
 		   compare_token(intent, "goodbye") == 0;
 }
@@ -391,7 +389,7 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n)
 		return 1;
 	}
 
-	snprintf(response, n, "hello");
+	snprintf(response, n, "Hello! What would you like to know?");
 	return 0;
 }
 
