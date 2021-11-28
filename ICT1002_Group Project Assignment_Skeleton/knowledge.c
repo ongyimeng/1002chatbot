@@ -236,6 +236,30 @@ void knowledge_reset()
  */
 void knowledge_write(FILE *f)
 {
-
-	/* to be implemented */
+	int occurence = 0;
+	ENTITY_PTR current = head;
+	ENTITY_PTR next = current;
+	char *intent = (char *)malloc(MAX_INTENT);
+	while(current != NULL) {
+		char *line = (char *)malloc(MAX_ENTITY+1+MAX_RESPONSE+1);
+		intent = current->intent;
+		occurence++;
+		if(occurence == 1) {
+			fprintf(f, "[%s]\n", intent);
+		}
+		strcat(line, current->entity);
+		strcat(line, "=");
+		strcat(line, current->response);
+		fprintf(f, "%s\n", line);
+		free(line);
+		next = current->next;
+		if(intent != next->intent) {
+			fprintf(f, "\n");
+			occurence = 0;
+		}
+		current = current->next;
+	}
+	// fprintf(f, "%s %s %s", current->intent, current->entity, current->response);
+	fclose(f);
+	free(intent);
 }
