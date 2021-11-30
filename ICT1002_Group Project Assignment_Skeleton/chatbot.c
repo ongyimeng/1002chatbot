@@ -308,9 +308,8 @@ int chatbot_is_reset(const char *intent)
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n)
 {
-
-	/* to be implemented */
-
+  knowledge_reset();
+  snprintf(response, n, "All data has been reset!");
 	return 0;
 }
 
@@ -367,7 +366,8 @@ int chatbot_is_smalltalk(const char *intent)
 		   compare_token(intent, "hi") == 0 ||
 		   compare_token(intent, "wassup") == 0 ||
 		   compare_token(intent, "greetings") == 0 ||
-		   compare_token(intent, "goodbye") == 0;
+		   compare_token(intent, "goodbye") == 0 ||
+       compare_token(intent, "bye") == 0;
 }
 
 /*
@@ -384,7 +384,7 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n)
 {
 
 	/* to be implemented */
-	if (compare_token(inv[0], "goodbye") == 0)
+	if (compare_token(inv[0], "goodbye") == 0 || compare_token(inv[0], "bye") == 0)
 	{
 		snprintf(response, n, "Goodbye!");
 		return 1;
@@ -393,13 +393,3 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n)
 	snprintf(response, n, "Hello! What would you like to know?");
 	return 0;
 }
-
-// int concate(char *inc, char *inv, char *index, char *entity) {
-// 	for (int i = index; i < inc; i++) {
-// 			strcat(entity, inv[i]);
-// 			if (i != inc - 1){
-// 				strcat(entity, " ");
-// 			}
-// 		}
-// 	return 0;
-// }

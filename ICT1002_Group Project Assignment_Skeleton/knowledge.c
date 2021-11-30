@@ -222,10 +222,16 @@ int knowledge_read(FILE *f)
 /*
  * Reset the knowledge base, removing all know entitities from all intents.
  */
-void knowledge_reset()
-{
+void knowledge_reset() {
+  ENTITY_PTR tmp = NULL;
 
-	/* to be implemented */
+  while (head != NULL) {
+  tmp = head->next;
+  memset(head, 0, sizeof(ENTITY));
+  free(head);
+  head = tmp;
+  }
+  head = NULL;
 }
 
 /*
@@ -238,28 +244,20 @@ void knowledge_write(FILE *f)
 {
 	int occurence = 0;
 	ENTITY_PTR current = head;
-	ENTITY_PTR next = current;
-	char *intent = (char *)malloc(MAX_INTENT);
-	while(current != NULL) {
-		char *line = (char *)malloc(MAX_ENTITY+1+MAX_RESPONSE+1);
-		intent = current->intent;
-		occurence++;
-		if(occurence == 1) {
-			fprintf(f, "[%s]\n", intent);
+	while (current != NULL) {
+		if (occurence == 0) {
+			fprintf(f, "[%s]\n", current->intent);
 		}
-		strcat(line, current->entity);
-		strcat(line, "=");
-		strcat(line, current->response);
-		fprintf(f, "%s\n", line);
-		free(line);
-		next = current->next;
-		if(intent != next->intent) {
-			fprintf(f, "\n");
-			occurence = 0;
+		fprintf(f, "%s%s%s\n", current->entity, "=", current->response);
+		if (current->next != NULL) {
+			if (compare_token(current->intent, current->next->intent) != 0) {
+				fprintf(f, "\n");
+				occurence = 0;
+			} else {
+				occurence++;
+			}
 		}
 		current = current->next;
 	}
-	// fprintf(f, "%s %s %s", current->intent, current->entity, current->response);
 	fclose(f);
-	free(intent);
 }
