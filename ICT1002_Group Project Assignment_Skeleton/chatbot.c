@@ -224,7 +224,7 @@ int chatbot_is_question(const char *intent)
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	int index, find_entity = 0;
+	int index, find_entity, success = 0;
 	char *user_entity;
 	user_entity = (char *)malloc(MAX_ENTITY);
 	char *answer = (char *)malloc(MAX_RESPONSE);
@@ -264,7 +264,17 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		}
 		strcat(question, user_entity);																			// Concatenate entity word to the back of the question variable from above
 		prompt_user(answer, MAX_RESPONSE, "I don't know. %s?", question);		// Ask user what is the answer
-		try_put_knowledge = knowledge_put(inv[0], user_entity, answer);			// Puts user answer into the knowledge base linked list
+		for (int i = 0; i < strlen(answer); i++) {
+			if (isspace(answer[i] != 0)) {
+				success = 1;
+			}
+		}
+		if (strcmp(answer, "") == 0 || success != 1) {
+			snprintf(response, n, ":-(");
+			return 0;
+		} else {
+			try_put_knowledge = knowledge_put(inv[0], user_entity, answer);			// Puts user answer into the knowledge base linked list
+		}
 		if (try_put_knowledge == KB_OK) {																		// If successful, say thank you ;)
 			snprintf(response, n, "Thank you.");
 		} else if (try_put_knowledge == KB_NOMEM) {
