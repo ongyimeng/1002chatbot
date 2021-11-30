@@ -265,8 +265,11 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		strcat(question, user_entity);																			// Concatenate entity word to the back of the question variable from above
 		prompt_user(answer, MAX_RESPONSE, "I don't know. %s?", question);		// Ask user what is the answer
 		for (int i = 0; i < strlen(answer); i++) {
-			if (isspace(answer[i] != 0)) {
+			if (isspace(answer[i]) != 0) {
+				success = 0;
+			} else {
 				success = 1;
+				break;
 			}
 		}
 		if (strcmp(answer, "") == 0 || success != 1) {
@@ -375,6 +378,7 @@ int chatbot_is_smalltalk(const char *intent)
 		   compare_token(intent, "hey") == 0 ||
 		   compare_token(intent, "hi") == 0 ||
 		   compare_token(intent, "wassup") == 0 ||
+		   compare_token(intent, "it's") == 0 ||
 		   compare_token(intent, "greetings") == 0 ||
 		   compare_token(intent, "goodbye") == 0 ||
        compare_token(intent, "bye") == 0;
@@ -398,8 +402,11 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n)
 	{
 		snprintf(response, n, "Goodbye!");
 		return 1;
+	} else if (compare_token(inv[0], "it's") == 0 ) {
+		snprintf(response, n, "Indeed it is.");
+		return 0;
 	}
 
-	snprintf(response, n, "Hello! What would you like to know?");
+	snprintf(response, n, "Hello! What would you like to chat about?");
 	return 0;
 }
