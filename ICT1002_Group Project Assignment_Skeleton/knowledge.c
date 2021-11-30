@@ -145,13 +145,16 @@ int knowledge_read(FILE *f)
 
 	while (fgets(readline, MAX_INPUT, f))
 	{
-		//To remove additional newLine on the specific line that is being read.
+		/*To remove additional \n on the specific line that is being read.*/
 		readline[strcspn(readline, "\n")] = 0;
 		int lineLength = strlen(readline);
 		for (int i = 0; i < lineLength; i++)
 		{
+			/*If the Read Line is an intent, it will contain a non-alphabet at the first character.
+			It will also check if the line has no "="*/
 			if (!isalpha(readline[i]) && !strstr(readline, "="))
 			{
+				/*Removes "[" and "]" to get the intent that is being read*/
 				char *linePtr = strtok(readline, "[");
 				char *endLinePtr = strtok(linePtr, "]");
 
@@ -180,11 +183,15 @@ int knowledge_read(FILE *f)
 					readIntent = 5;
 				}
 			}
+			/*Once intent is being read, next in line will be entity and reply.
+			This will search for "=". If it contains "=", then it is entity and reply*/
 			else if (strrchr(readline, '='))
 			{
+				/*A pointer to point at the entity and the reply*/
 				char *entity = strtok(readline, "=");
 				char *reply = strtok(NULL, "=");
 
+				/* Switch function is used to put each intent, followed by its entity and reply */
 				switch (readIntent)
 				{
 				case 0:

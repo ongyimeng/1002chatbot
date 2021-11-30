@@ -176,6 +176,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
 		int checkRead = knowledge_read(f);
 		if (checkRead == 0)
 		{
+			fclose(f);
 			snprintf(response, n, "%s has been loaded successfully.", inv[1]);
 		}
 		else
