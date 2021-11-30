@@ -27,9 +27,12 @@
 #define KB_NOTFOUND -1
 #define KB_INVALID  -2
 #define KB_NOMEM    -3
-#define WHO "WHO"
-#define WHAT "WHAT"
-#define WHERE "WHERE"
+#define WHO "who"
+#define WHAT "what"
+#define WHERE "where"
+#define WHEN "when"
+#define WHY "why"
+#define HOW "how"
 
 typedef struct entity {
   char intent[MAX_INTENT];

@@ -199,8 +199,8 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
  */
 int chatbot_is_question(const char *intent)
 {
-	char intentqns[3][6] = {WHAT, WHERE, WHO};
-	for (int i = 0; i < 3; i++)
+	char intentqns[6][6] = {WHAT, WHERE, WHO, WHEN, WHY, HOW};
+	for (int i = 0; i < 6; i++)
 	{
 		if (compare_token(intentqns[i], intent) == 0)
 		{
@@ -320,7 +320,7 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n)
  *  intent - the intent
  *
  * Returns:
- *  1, if the intent is "what", "where", or "who"
+ *  1, if the intent is "save"
  *  0, otherwise
  */
 int chatbot_is_save(const char *intent)

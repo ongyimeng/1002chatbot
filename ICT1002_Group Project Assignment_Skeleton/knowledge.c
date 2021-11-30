@@ -75,6 +75,9 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  */
 char knowledge_put(char *intent, char *entity, char *response)
 {
+	if (chatbot_is_question(intent) == KB_INVALID) {
+		return KB_INVALID;
+	}
 	ENTITY_PTR current = head;
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	if (insert != NULL) {
@@ -134,7 +137,6 @@ char knowledge_put(char *intent, char *entity, char *response)
 int knowledge_read(FILE *f)
 {
 
-	/* to be implemented */
 	char readline[164];
 	char *entity;
 	char *reply;
@@ -153,27 +155,27 @@ int knowledge_read(FILE *f)
 				char *linePtr = strtok(readline, "[");
 				char *endLinePtr = strtok(linePtr, "]");
 
-				if (compare_token(endLinePtr, "who") == 0)
+				if (compare_token(endLinePtr, WHO) == 0)
 				{
 					readIntent = 0;
 				}
-				else if (compare_token(endLinePtr, "what") == 0)
+				else if (compare_token(endLinePtr, WHAT) == 0)
 				{
 					readIntent = 1;
 				}
-				else if (compare_token(endLinePtr, "where") == 0)
+				else if (compare_token(endLinePtr, WHERE) == 0)
 				{
 					readIntent = 2;
 				}
-				else if (compare_token(endLinePtr, "when") == 0)
+				else if (compare_token(endLinePtr, WHEN) == 0)
 				{
 					readIntent = 3;
 				}
-				else if (compare_token(endLinePtr, "why") == 0)
+				else if (compare_token(endLinePtr, WHY) == 0)
 				{
 					readIntent = 4;
 				}
-				else if (compare_token(endLinePtr, "how") == 0)
+				else if (compare_token(endLinePtr, HOW) == 0)
 				{
 					readIntent = 5;
 				}
@@ -186,22 +188,22 @@ int knowledge_read(FILE *f)
 				switch (readIntent)
 				{
 				case 0:
-					knowledge_put("who", entity, reply);
+					knowledge_put(WHO, entity, reply);
 					break;
 				case 1:
-					knowledge_put("what", entity, reply);
+					knowledge_put(WHAT, entity, reply);
 					break;
 				case 2:
-					knowledge_put("where", entity, reply);
+					knowledge_put(WHERE, entity, reply);
 					break;
 				case 3:
-					knowledge_put("when", entity, reply);
+					knowledge_put(WHEN, entity, reply);
 					break;
 				case 4:
-					knowledge_put("why", entity, reply);
+					knowledge_put(WHY, entity, reply);
 					break;
 				case 5:
-					knowledge_put("how", entity, reply);
+					knowledge_put(HOW, entity, reply);
 					break;
 				default:
 					break;
