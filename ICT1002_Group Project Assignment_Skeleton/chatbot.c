@@ -194,7 +194,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
  *  intent - the intent
  *
  * Returns:
- *  1, if the intent is "what", "where", or "who"
+ *  1, if the intent is 5W1H
  *  0, otherwise
  */
 int chatbot_is_question(const char *intent)
@@ -353,7 +353,13 @@ int chatbot_is_save(const char *intent)
 int chatbot_do_save(int inc, char *inv[], char *response, int n)
 {
 	FILE* f;
-	f = fopen(inv[1], "w");
+	char *fileName;
+	if (compare_token(inv[1], "as") == 0) {
+		fileName = inv[2];
+	} else if (inc == 2) {
+		fileName = inv[1];
+	}
+	f = fopen(fileName, "w");
 	knowledge_write(f);
 	snprintf(response, n, "Saved!");
 	return 0;

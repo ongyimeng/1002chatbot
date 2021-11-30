@@ -73,11 +73,13 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   KB_NOMEM, if there was a memory allocation failure
  *   KB_INVALID, if the intent is not a valid question word
  */
-char knowledge_put(char *intent, char *entity, char *response)
+int knowledge_put(char *intent, char *entity, char *response)
 {
 	if (chatbot_is_question(intent) == KB_INVALID) {
 		return KB_INVALID;
 	}
+	int exist = 0;
+	ENTITY_PTR find = head;
 	ENTITY_PTR current = head;
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	if (insert != NULL) {
@@ -94,35 +96,103 @@ char knowledge_put(char *intent, char *entity, char *response)
 		current = head;
 	}
 
-	while (current != NULL)
-	{
-		if (compare_token(current->intent, intent) == 0)
-		{
-			if (compare_token(current->entity, entity) == 0)
-			{
-				strcpy(current->response, response);
-				break;
-			}
-			else
-			{
-				insert->next = current->next;
-				current->next = insert;
-				break;
-			}
+	while (find != NULL) {
+		if (compare_token(find->intent, intent) == 0 && compare_token(find->entity, entity) == 0) {
+			strcpy(current->response, response);
+			exist = 1;
+			break;
 		}
-		else
-		{
-			if (current->next == NULL)
-			{
+		find = find->next;
+	}
+	if (exist == 0) {
+		while (current != NULL) {
+			if (current->next != NULL) {
+				if (compare_token(current->intent, intent) == 0 && compare_token(current->next->intent, intent) != 0) {
+					insert->next = current->next;
+					current->next = insert;
+					break;
+				} 
+			} else {
 				current->next = insert;
 				break;
 			}
-			else
-			{
-				current = current->next;
-			}
+			current = current->next;
 		}
 	}
+
+	// if (exist != 1) {
+	// 	while (current != NULL)
+	// 	{
+	// 		if (compare_token(current->intent, intent) == 0)
+	// 		{
+	// 			// if (compare_token(current->entity, entity) == 0)					// Check if entity and intent pair exists
+	// 			// {
+	// 			// 	if (compare_token(current->response, response) == 0) {
+	// 			// 		free(insert);
+	// 			// 		break;
+	// 			// 	} else {
+	// 			// 		strcpy(current->response, response);
+	// 			// 		free(insert);
+	// 			// 		break;
+	// 			// 	}
+	// 			// }
+	// 			// else
+	// 			// {
+	// 				if (compare_token(current->intent, current->next->intent) != 0)
+	// 				insert->next = current->next;
+	// 				current->next = insert;
+	// 				break;
+	// 			// }
+	// 		}
+	// 		// else
+	// 		// {
+	// 			if (current->next == NULL)
+	// 			{
+	// 				current->next = insert;
+	// 				break;
+	// 			}
+	// 			else
+	// 			{
+	// 				current = current->next;
+	// 			}
+	// 		// }
+	// 	}
+	// }
+	// while (current != NULL)
+	// {
+	// 	if (compare_token(current->intent, intent) == 0)
+	// 	{
+	// 		if (compare_token(current->entity, entity) == 0)					// Check if entity and intent pair exists
+	// 		{
+	// 			if (compare_token(current->response, response) == 0) {
+	// 				free(insert);
+	// 				break;
+	// 			} else {
+	// 				strcpy(current->response, response);
+	// 				free(insert);
+	// 				break;
+	// 			}
+	// 		}
+	// 		else
+	// 		{
+	// 			insert->next = current->next;
+	// 			current->next = insert;
+	// 			break;
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		if (current->next == NULL)
+	// 		{
+	// 			current->next = insert;
+	// 			break;
+	// 		}
+	// 		else
+	// 		{
+	// 			current = current->next;
+	// 		}
+	// 	}
+	// }
 	return KB_OK;
 }
 
