@@ -87,10 +87,6 @@ int knowledge_put(char *intent, char *entity, char *response)
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	find = head;
 	current = head;
-	// Adding the intent, entity, response into the node
-	if (find == NULL || current == NULL) { 
-		return KB_NOMEM;
-	}
 	if (insert != NULL) {
 		strcpy(insert->intent, intent);
 		strcpy(insert->entity, entity);
@@ -98,17 +94,17 @@ int knowledge_put(char *intent, char *entity, char *response)
 	} else {
 		return KB_NOMEM;
 	}
-	// If head doesn't point to anything, make the new node the head, else, set the current and find to head
+
 	if (head == NULL) {
 		head = insert;
 	} else {
 		current = head;
 		find = head;
 	}
-	// Try and find the intent and entity pair. 
+
 	while (find != NULL) {
 		if (compare_token(find->intent, intent) == 0 && compare_token(find->entity, entity) == 0) {
-			if (compare_token(find->intent, intent) == 0) {
+			if (compare_token(find->response, response) == 0) {
 				exist = 1;
 				break;
 			} else {
@@ -119,7 +115,6 @@ int knowledge_put(char *intent, char *entity, char *response)
 		}
 		find = find->next;
 	}
-	// If entity doesnt exist, insert it to the end of the intent chunk
 	if (exist == 0) {
 		while (current != NULL) {
 			if (current->next != NULL) {
@@ -149,7 +144,7 @@ int knowledge_put(char *intent, char *entity, char *response)
 int knowledge_read(FILE *f)
 {
 
-	char readline[MAX_ENTITY+MAX_RESPONSE];
+	char readline[MAX_RESPONSE + MAX_ENTITY];
 	char *entity;
 	char *reply;
 	int readIntent;
