@@ -79,8 +79,11 @@ int knowledge_put(char *intent, char *entity, char *response)
 		return KB_INVALID;
 	}
 	int exist = 0;
+	// Pointer for finding if intent and entity exists
 	ENTITY_PTR find = (ENTITY_PTR)malloc(sizeof(ENTITY));
+	// Pointer for iterating through linked list
 	ENTITY_PTR current = (ENTITY_PTR)malloc(sizeof(ENTITY));
+	// Pointer to node that holds the intent, entity and response
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	find = head;
 	current = head;
