@@ -80,14 +80,17 @@ int knowledge_put(char *intent, char *entity, char *response)
 	}
 	int exist = 0;
 	// Pointer for finding if intent and entity exists
-	ENTITY_PTR find;
+	ENTITY_PTR find = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	// Pointer for iterating through linked list
-	ENTITY_PTR current;
+	ENTITY_PTR current = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	// Pointer to node that holds the intent, entity and response
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	find = head;
 	current = head;
 	// Adding the intent, entity, response into the node
+	if (find == NULL || current == NULL) { 
+		return KB_NOMEM;
+	}
 	if (insert != NULL) {
 		strcpy(insert->intent, intent);
 		strcpy(insert->entity, entity);
