@@ -183,6 +183,8 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
 		{
 			snprintf(response, n, "Sorry, file is not loaded. Please ensure that the file name or file exist.");
 		}
+	}else if (inc == 0){
+		snprintf(response, n, "Sorry, file is not loaded. Please ensure that the file name or file exist.");
 	}
 
 	return 0;
