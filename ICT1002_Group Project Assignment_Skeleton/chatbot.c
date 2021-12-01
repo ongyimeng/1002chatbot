@@ -183,8 +183,6 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
 		{
 			snprintf(response, n, "Sorry, file is not loaded. Please ensure that the file name or file exist.");
 		}
-	}else if(inc == 1){
-		snprintf(response, n, "Sorry, file is not loaded. Please ensure that the file name or file exist.");
 	}
 
 	return 0;
@@ -202,7 +200,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
  */
 int chatbot_is_question(const char *intent)
 {
-	char intentqns[6][6] = { WHAT, WHERE, WHO, WHEN, WHY, HOW };
+	char intentqns[6][6] = {WHAT, WHERE, WHO, WHEN, WHY, HOW};
 	for (int i = 0; i < 6; i++)
 	{
 		if (compare_token(intentqns[i], intent) == 0)
@@ -233,7 +231,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	char *answer = (char *)malloc(MAX_RESPONSE);
 	int try_put_knowledge;
 	if (user_entity == NULL) {
-		snprintf(response, n, "Insfficient memory space");									// No space means your computer is lousy, and has run out of space
+		snprintf(response, n, "Insufficient memory space");									// No space means your computer is lousy, and has run out of space
 		return 1;
 	}
 	if (inc > 1) {																												// If the sentence is more than a word
@@ -279,12 +277,12 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			snprintf(response, n, ":-(");
 			return 0;
 		} else {
-			try_put_knowledge = knowledge_put(inv[0], user_entity, answer);		// Puts user answer into the knowledge base linked list
+			try_put_knowledge = knowledge_put(inv[0], user_entity, answer);			// Puts user answer into the knowledge base linked list
 		}
 		if (try_put_knowledge == KB_OK) {																		// If successful, say thank you ;)
-			snprintf(response, n, "Thank you. I have saved the answer!");
+			snprintf(response, n, "Thank you.");
 		} else if (try_put_knowledge == KB_NOMEM) {
-			snprintf(response, n, "Insfficient memory space");								// Not enough space, your computer must be very old 
+			snprintf(response, n, "Insufficient memory space");								// Not enough space, your computer must be very old 
 		} else if (try_put_knowledge == KB_INVALID) {
 			snprintf(response, n, "Invalid intent specified");								// We do not understand your intent
 		}
@@ -381,16 +379,20 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n)
  */
 int chatbot_is_smalltalk(const char *intent)
 {
-
 	/* to be implemented */
 	return compare_token(intent, "hello") == 0 ||
-		   compare_token(intent, "hey") == 0 ||
-		   compare_token(intent, "hi") == 0 ||
-		   compare_token(intent, "wassup") == 0 ||
-		   compare_token(intent, "it's") == 0 ||
-		   compare_token(intent, "greetings") == 0 ||
-		   compare_token(intent, "goodbye") == 0 ||
-       compare_token(intent, "bye") == 0;
+      compare_token(intent, "hey") == 0 ||
+      compare_token(intent, "hi") == 0 ||
+      compare_token(intent, "wassup") == 0 ||
+      compare_token(intent, "it's") == 0 ||
+      compare_token(intent, "greetings") == 0 ||
+      compare_token(intent, "goodbye") == 0 ||
+      compare_token(intent, "bye") == 0 ||
+      compare_token(intent, "school") == 0 ||
+      compare_token(intent, "like") == 0 ||
+      compare_token(intent, "i") == 0 ||
+      compare_token(intent, "are") == 0 ||
+      compare_token(intent, "bye") == 0;
 }
 
 /*
@@ -405,14 +407,26 @@ int chatbot_is_smalltalk(const char *intent)
  */
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n)
 {
-
 	/* to be implemented */
 	if (compare_token(inv[0], "goodbye") == 0 || compare_token(inv[0], "bye") == 0)
 	{
 		snprintf(response, n, "Goodbye!");
 		return 1;
-	} else if (compare_token(inv[0], "it's") == 0 ) {
+
+	} else if (compare_token(inv[0], "it's") == 0) {
 		snprintf(response, n, "Indeed it is.");
+		return 0;
+	}
+  else if (compare_token(inv[0], "school") == 0) {
+		snprintf(response, n, "School is a great place to learn new things!");
+		return 0;
+	}
+    else if (compare_token(inv[0], "i") == 0 && compare_token(inv[1], "like") == 0) {
+		snprintf(response, n, "I like it too!");
+		return 0;
+	}
+    else if (compare_token(inv[0], "are") == 0){
+		snprintf(response, n, "Unfortunately, I am just a bot...");
 		return 0;
 	}
 
