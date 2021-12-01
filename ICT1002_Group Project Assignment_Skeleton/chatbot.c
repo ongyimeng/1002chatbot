@@ -228,9 +228,8 @@ int chatbot_is_question(const char *intent)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	int index, find_entity, success = 0;
-	char *user_entity;
-	user_entity = (char *)malloc(MAX_ENTITY);
-	char *answer = (char *)malloc(MAX_RESPONSE);
+	char *user_entity[MAX_ENTITY];
+	char *answer[MAX_RESPONSE];
 	int try_put_knowledge;
 	if (user_entity == NULL) {
 		snprintf(response, n, "Insufficient memory space");									// No space means your computer is lousy, and has run out of space
