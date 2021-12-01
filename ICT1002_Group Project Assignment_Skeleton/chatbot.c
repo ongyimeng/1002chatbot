@@ -200,7 +200,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
  */
 int chatbot_is_question(const char *intent)
 {
-	char intentqns[6][6] = {WHAT, WHERE, WHO, WHEN, WHY, HOW};
+	char intentqns[6][6] = { WHAT, WHERE, WHO, WHEN, WHY, HOW };
 	for (int i = 0; i < 6; i++)
 	{
 		if (compare_token(intentqns[i], intent) == 0)
@@ -277,10 +277,10 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			snprintf(response, n, ":-(");
 			return 0;
 		} else {
-			try_put_knowledge = knowledge_put(inv[0], user_entity, answer);			// Puts user answer into the knowledge base linked list
+			try_put_knowledge = knowledge_put(inv[0], user_entity, answer);		// Puts user answer into the knowledge base linked list
 		}
 		if (try_put_knowledge == KB_OK) {																		// If successful, say thank you ;)
-			snprintf(response, n, "Thank you.");
+			snprintf(response, n, "Thank you. I have saved the answer!");
 		} else if (try_put_knowledge == KB_NOMEM) {
 			snprintf(response, n, "Insfficient memory space");								// Not enough space, your computer must be very old 
 		} else if (try_put_knowledge == KB_INVALID) {

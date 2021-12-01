@@ -1,5 +1,5 @@
 [what]
-SIT=Zhengkui teaches the Python section of ICT1002.
+SIT=SIT is an autonomous university in Singapore.
 ICT Cluster=ICT Cluster offers degrees in software engineering, information security and telematics.
 ICT1001=Introduction to ICT.
 ICT1002=Programming Fundamentals.

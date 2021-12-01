@@ -79,9 +79,11 @@ int knowledge_put(char *intent, char *entity, char *response)
 		return KB_INVALID;
 	}
 	int exist = 0;
-	ENTITY_PTR find = head;
-	ENTITY_PTR current = head;
+	ENTITY_PTR find = (ENTITY_PTR)malloc(sizeof(ENTITY));
+	ENTITY_PTR current = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
+	find = head;
+	current = head;
 	if (insert != NULL) {
 		strcpy(insert->intent, intent);
 		strcpy(insert->entity, entity);
@@ -94,13 +96,19 @@ int knowledge_put(char *intent, char *entity, char *response)
 		head = insert;
 	} else {
 		current = head;
+		find = head;
 	}
 
 	while (find != NULL) {
 		if (compare_token(find->intent, intent) == 0 && compare_token(find->entity, entity) == 0) {
-			strcpy(current->response, response);
-			exist = 1;
-			break;
+			if (compare_token(find->response, response) == 0) {
+				exist = 1;
+				break;
+			} else {
+				strcpy(current->response, response);
+				exist = 1;
+				break;
+			}
 		}
 		find = find->next;
 	}
@@ -133,7 +141,7 @@ int knowledge_put(char *intent, char *entity, char *response)
 int knowledge_read(FILE *f)
 {
 
-	char readline[164];
+	char readline[MAX_RESPONSE + MAX_ENTITY];
 	char *entity;
 	char *reply;
 	int readIntent;
