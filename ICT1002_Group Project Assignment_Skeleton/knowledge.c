@@ -119,80 +119,6 @@ int knowledge_put(char *intent, char *entity, char *response)
 			current = current->next;
 		}
 	}
-
-	// if (exist != 1) {
-	// 	while (current != NULL)
-	// 	{
-	// 		if (compare_token(current->intent, intent) == 0)
-	// 		{
-	// 			// if (compare_token(current->entity, entity) == 0)					// Check if entity and intent pair exists
-	// 			// {
-	// 			// 	if (compare_token(current->response, response) == 0) {
-	// 			// 		free(insert);
-	// 			// 		break;
-	// 			// 	} else {
-	// 			// 		strcpy(current->response, response);
-	// 			// 		free(insert);
-	// 			// 		break;
-	// 			// 	}
-	// 			// }
-	// 			// else
-	// 			// {
-	// 				if (compare_token(current->intent, current->next->intent) != 0)
-	// 				insert->next = current->next;
-	// 				current->next = insert;
-	// 				break;
-	// 			// }
-	// 		}
-	// 		// else
-	// 		// {
-	// 			if (current->next == NULL)
-	// 			{
-	// 				current->next = insert;
-	// 				break;
-	// 			}
-	// 			else
-	// 			{
-	// 				current = current->next;
-	// 			}
-	// 		// }
-	// 	}
-	// }
-	// while (current != NULL)
-	// {
-	// 	if (compare_token(current->intent, intent) == 0)
-	// 	{
-	// 		if (compare_token(current->entity, entity) == 0)					// Check if entity and intent pair exists
-	// 		{
-	// 			if (compare_token(current->response, response) == 0) {
-	// 				free(insert);
-	// 				break;
-	// 			} else {
-	// 				strcpy(current->response, response);
-	// 				free(insert);
-	// 				break;
-	// 			}
-	// 		}
-	// 		else
-	// 		{
-	// 			insert->next = current->next;
-	// 			current->next = insert;
-	// 			break;
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		if (current->next == NULL)
-	// 		{
-	// 			current->next = insert;
-	// 			break;
-	// 		}
-	// 		else
-	// 		{
-	// 			current = current->next;
-	// 		}
-	// 	}
-	// }
 	return KB_OK;
 }
 
@@ -215,16 +141,13 @@ int knowledge_read(FILE *f)
 
 	while (fgets(readline, MAX_INPUT, f))
 	{
-		/*To remove additional \n on the specific line that is being read.*/
+		//To remove additional newLine on the specific line that is being read.
 		readline[strcspn(readline, "\n")] = 0;
 		int lineLength = strlen(readline);
 		for (int i = 0; i < lineLength; i++)
 		{
-			/*If the Read Line is an intent, it will contain a non-alphabet at the first character.
-			It will also check if the line has no "="*/
 			if (!isalpha(readline[i]) && !strstr(readline, "="))
 			{
-				/*Removes "[" and "]" to get the intent that is being read*/
 				char *linePtr = strtok(readline, "[");
 				char *endLinePtr = strtok(linePtr, "]");
 
@@ -253,15 +176,11 @@ int knowledge_read(FILE *f)
 					readIntent = 5;
 				}
 			}
-			/*Once intent is being read, next in line will be entity and reply.
-			This will search for "=". If it contains "=", then it is entity and reply*/
 			else if (strrchr(readline, '='))
 			{
-				/*A pointer to point at the entity and the reply*/
 				char *entity = strtok(readline, "=");
 				char *reply = strtok(NULL, "=");
 
-				/* Switch function is used to put each intent, followed by its entity and reply */
 				switch (readIntent)
 				{
 				case 0:
