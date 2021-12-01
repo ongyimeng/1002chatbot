@@ -80,13 +80,14 @@ int knowledge_put(char *intent, char *entity, char *response)
 	}
 	int exist = 0;
 	// Pointer for finding if intent and entity exists
-	ENTITY_PTR find = (ENTITY_PTR)malloc(sizeof(ENTITY));
+	ENTITY_PTR find;
 	// Pointer for iterating through linked list
-	ENTITY_PTR current = (ENTITY_PTR)malloc(sizeof(ENTITY));
+	ENTITY_PTR current;
 	// Pointer to node that holds the intent, entity and response
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	find = head;
 	current = head;
+	// Adding the intent, entity, response into the node
 	if (insert != NULL) {
 		strcpy(insert->intent, intent);
 		strcpy(insert->entity, entity);
@@ -95,6 +96,7 @@ int knowledge_put(char *intent, char *entity, char *response)
 		return KB_NOMEM;
 	}
 
+	// If head doesn't point to anything, make the new node the head, else, set the current and find to head
 	if (head == NULL) {
 		head = insert;
 	} else {
@@ -102,6 +104,7 @@ int knowledge_put(char *intent, char *entity, char *response)
 		find = head;
 	}
 
+	// Try and find the intent and entity pair. 
 	while (find != NULL) {
 		if (compare_token(find->intent, intent) == 0 && compare_token(find->entity, entity) == 0) {
 			if (compare_token(find->response, response) == 0) {
@@ -115,6 +118,7 @@ int knowledge_put(char *intent, char *entity, char *response)
 		}
 		find = find->next;
 	}
+	// If entity doesnt exist, insert it to the end of the intent chunk
 	if (exist == 0) {
 		while (current != NULL) {
 			if (current->next != NULL) {
