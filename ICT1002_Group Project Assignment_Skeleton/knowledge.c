@@ -83,25 +83,38 @@ int knowledge_put(char *intent, char *entity, char *response)
 	ENTITY_PTR find = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	// Pointer for iterating through linked list
 	ENTITY_PTR current = (ENTITY_PTR)malloc(sizeof(ENTITY));
-	// Pointer to node that holds the intent, entity and response
+	// Pointer to a node, which holds the intent, entity and response
 	ENTITY_PTR insert = (ENTITY_PTR)malloc(sizeof(ENTITY));
 	find = head;
 	current = head;
+	// Assigning the variables into the node
 	if (insert != NULL) {
 		strcpy(insert->intent, intent);
 		strcpy(insert->entity, entity);
 		strcpy(insert->response, response);
 	} else {
+		// If the new node could not be allocated with memory, this will run
 		return KB_NOMEM;
 	}
-
+	/*
+	 * Check if there is an existing linked list.
+	 * If there isn't, we will set the head to point to the new node that we just created.
+	 * If there is, we will set the current ptr to the start of the list
+	 */
 	if (head == NULL) {
 		head = insert;
 	} else {
 		current = head;
 		find = head;
 	}
-
+	/* 
+	 * First, we will try to find if the intent and entity exists in the linked list.
+	 * We traverse throught the linked list using the "find" ptr.
+	 * Then we will check if the current node's intent and entity matches the one the user has input.
+	 * If it is, then we will check if the responses are the same, if they are we break out of the loop. 
+	 * If they aren't, we will update it with the latest one in the knowledge file.
+	 * Lastly, a variable will be set to "1" we find a matching node.
+	 */
 	while (find != NULL) {
 		if (compare_token(find->intent, intent) == 0 && compare_token(find->entity, entity) == 0) {
 			if (compare_token(find->response, response) == 0) {
@@ -115,8 +128,19 @@ int knowledge_put(char *intent, char *entity, char *response)
 		}
 		find = find->next;
 	}
+	/* 
+	 * If the incoming intent and entity pair exists in the linked list, we will not run this code.
+	 * If it doesn't exist, we will traverse through the linked list again.
+	 */
 	if (exist == 0) {
 		while (current != NULL) {
+			/* 
+			 * Here, we are trying to see if there is a next node to point to, 
+			 * if it doesn't it will add the new node at the end of the list (see ELSE).
+			 * If there is a next node, we will check if the current node's intent is the same as the incoming one,
+			 * if they are, we will also check if the next node's intent is not the same.
+			 * When these two criterias are fulfilled, we will add the new node in between the current and next node.
+			 */
 			if (current->next != NULL) {
 				if (compare_token(current->intent, intent) == 0 && compare_token(current->next->intent, intent) != 0) {
 					insert->next = current->next;

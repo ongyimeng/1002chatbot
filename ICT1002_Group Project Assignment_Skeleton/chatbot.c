@@ -53,7 +53,6 @@
  */
 const char *chatbot_botname()
 {
-
 	return "Chatbot";
 }
 
@@ -64,7 +63,6 @@ const char *chatbot_botname()
  */
 const char *chatbot_username()
 {
-
 	return "User";
 }
 
@@ -80,8 +78,6 @@ const char *chatbot_username()
  */
 int chatbot_main(int inc, char *inv[], char *response, int n)
 {
-
-	/* check for empty input */
 	if (inc < 1)
 	{
 		snprintf(response, n, "");
@@ -120,7 +116,6 @@ int chatbot_main(int inc, char *inv[], char *response, int n)
  */
 int chatbot_is_exit(const char *intent)
 {
-
 	return compare_token(intent, "exit") == 0 || compare_token(intent, "quit") == 0;
 }
 
@@ -229,44 +224,59 @@ int chatbot_is_question(const char *intent)
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	int index, find_entity, success = 0;
 	char *user_entity;
+	char *answer;
 	user_entity = (char *)malloc(MAX_ENTITY);
-	char *answer = (char *)malloc(MAX_RESPONSE);
+	answer = (char *)malloc(MAX_RESPONSE);
 	int try_put_knowledge;
-	if (user_entity == NULL) {
-		snprintf(response, n, "Insufficient memory space");									// No space means your computer is lousy, and has run out of space
+	// Check if the two char pointer were allocated space
+	if (user_entity == NULL || answer == NULL) {
+		snprintf(response, n, "Insufficient memory space");
 		return 1;
 	}
-	if (inc > 1) {																												// If the sentence is more than a word
+	/* 
+	Check if the sentence is more than a word. If yes, 
+	set the index to 2 (3rd word) to skip "is/are" which is the 2nd word.
+	Set the index to 1 (2nd word) if the words are neither "is" nor "are".
+	*/
+	if (inc > 1) {																												
 		if (!compare_token(inv[1], "is") || !compare_token(inv[1], "are")) {
-			index = 2;																												// Setting the index to 2 (3rd word) to skip "is/are" which is the 2nd word. 
+			index = 2;
 		} else {
-			index = 1;																												// Setting the index to 1 (2nd word) if the words are neither "is" nor "are".
+			index = 1;
 		}
 		if (inv[index]) {
 			for (int i = index; i < inc; i++) {
 				strcat(user_entity, inv[i]);
-				if (i != inc - 1) {																							// If current word is not the last word, add a space
+				// If current word is not the last word, add a space
+				if (i != inc - 1) {
 					strcat(user_entity, " ");
 				}
 			}
 		} else {
 			snprintf(response, n, "No entity was found.");
 		}
-		find_entity = knowledge_get(inv[0], user_entity, response, n);			// Get entity
+		// Try to find entity from the linked list, a number will be returned from the function
+		find_entity = knowledge_get(inv[0], user_entity, response, n);
 	} else {
 		snprintf(response, n, "No entity was found.");
 	}
 	
-	if (find_entity == KB_NOTFOUND) {																			// If there was no record of that entity
-		char *question = (char *)malloc(MAX_RESPONSE);											
-		for (int i = 0; i < index; i++) {																		// Loop through the words in the original question and add it to question var
+	// If there was no record of that entity in the linked list
+	if (find_entity == KB_NOTFOUND) {
+		char *question = (char *)malloc(MAX_RESPONSE);
+		// Loop through the words in the original user prompt and add it to question variable to make a whole sentence. 				
+		for (int i = 0; i < index; i++) {
 			strcat(question, inv[i]);
-				if (i != inc - 1) {																							// If current word is not the last word, add a space
+				// If current word is not the last word, add a space
+				if (i != inc - 1) {
 					strcat(question, " ");
 				}
 		}
-		strcat(question, user_entity);																			// Concatenate entity word to the back of the question variable from above
-		prompt_user(answer, MAX_RESPONSE, "I don't know. %s?", question);		// Ask user what is the answer
+		// Concatenate entity word to the back of the question variable from above
+		strcat(question, user_entity);
+		// Ask user what is the answer
+		prompt_user(answer, MAX_RESPONSE, "I don't know. %s?", question);
+		// Check if the user has input an empty string or SPACE
 		for (int i = 0; i < strlen(answer); i++) {
 			if (isspace(answer[i]) != 0) {
 				success = 0;
@@ -275,21 +285,27 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 				break;
 			}
 		}
+		// If the user input is invalid, then reply to the user with a sad face
 		if (strcmp(answer, "") == 0 || success != 1) {
 			snprintf(response, n, ":-(");
 			return 0;
 		} else {
-			try_put_knowledge = knowledge_put(inv[0], user_entity, answer);			// Puts user answer into the knowledge base linked list
+			// If the user response is valid, proceed to add it into the linked list
+			try_put_knowledge = knowledge_put(inv[0], user_entity, answer);
 		}
-		if (try_put_knowledge == KB_OK) {																		// If successful, say thank you ;)
+		/*
+		If adding a node into the list was successful, say thank you ;)
+		Else if funciton returns with KB_NOMEM, the program cannot allocate memory for the variables
+		else if KB_INVALID, means the user has input an intent that the chatbor doesn't understand
+		*/
+		if (try_put_knowledge == KB_OK) {
 			snprintf(response, n, "Thank you.");
 		} else if (try_put_knowledge == KB_NOMEM) {
-			snprintf(response, n, "Insufficient memory space");								// Not enough space, your computer must be very old 
+			snprintf(response, n, "Insufficient memory space");
 		} else if (try_put_knowledge == KB_INVALID) {
-			snprintf(response, n, "Invalid intent specified");								// We do not understand your intent
+			snprintf(response, n, "Invalid intent specified");
 		}
 		free(question);
-		// free(answer);
 	}
 	free(user_entity);
 	return 0;
@@ -414,7 +430,6 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n)
 	{
 		snprintf(response, n, "Goodbye!");
 		return 1;
-
 	} else if (compare_token(inv[0], "it's") == 0) {
 		snprintf(response, n, "Indeed it is.");
 		return 0;
@@ -422,12 +437,10 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n)
   else if (compare_token(inv[0], "school") == 0) {
 		snprintf(response, n, "School is a great place to learn new things!");
 		return 0;
-	}
-    else if (compare_token(inv[0], "i") == 0 && compare_token(inv[1], "like") == 0) {
+	} else if (compare_token(inv[0], "i") == 0 && compare_token(inv[1], "like") == 0) {
 		snprintf(response, n, "I like it too!");
 		return 0;
-	}
-    else if (compare_token(inv[0], "are") == 0){
+	} else if (compare_token(inv[0], "are") == 0){
 		snprintf(response, n, "Unfortunately, I am just a bot...");
 		return 0;
 	}

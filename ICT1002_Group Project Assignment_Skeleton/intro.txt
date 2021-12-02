@@ -1,5 +1,2 @@
 [what]
-intro=Welcome to the video demonstration of Team 34s C Project
-
-[who]
-we=Ong Yi Meng and Chee Kang Chen and Muhammad Izhar Fazril Bin Sulaiman and Naomi Cole Lam Ying Tong
+intro=Welcome to the video demonstration of Team 34's C Project, Created by Ong Yi Meng, Chee Kang Chen, Muhammad Izhar Fazril Bin Sulaiman and Naomi Cole Lam Ying Tong. Please enjoy.
