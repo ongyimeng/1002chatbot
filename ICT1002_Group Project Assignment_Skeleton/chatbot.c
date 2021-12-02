@@ -386,8 +386,8 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n)
 	}
 	f = fopen(fileName, "w");
 	knowledge_write(f);
-	snprintf(response, n, "Saved!");
 	fclose(f);
+	snprintf(response, n, "Saved!");
 	return 0;
 }
 
