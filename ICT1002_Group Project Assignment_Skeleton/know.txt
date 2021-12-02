@@ -6,7 +6,6 @@ ICT1002=Programming Fundamentals.
 ICT1003=Computer Organisation and Architecture.
 ICT1004=Web Systems and Technologies.
 ICT1005=Mathematics and Statistics for ICT.
-intro=Welcome to the video demonstration of Team 34's C Project. Created by Ong Yi Meng, Chee Kang Chen, Muhammad Izhar Fazril Bin Sulaiman and Naomi Cole Lam Ying Tong. Please enjoy!
 
 [where]
 SIT=SIT has a main campus at Dover plus a building at each of Singapore's polytechnics.

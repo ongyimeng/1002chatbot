@@ -57,7 +57,11 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 				return KB_OK;
 			}
 		}
-		current = current->next;
+		if (current->next != NULL) { 
+			current = current->next;
+		} else {
+			break;
+		}
 	}
 
 	return KB_NOTFOUND;
