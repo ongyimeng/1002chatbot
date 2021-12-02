@@ -181,60 +181,51 @@ int knowledge_read(FILE *f)
 		int lineLength = strlen(readline);
 		for (int i = 0; i < lineLength; i++)
 		{
+			/*
+			 * If the Read Line is an intent, it will contain a non-alphabet at the first character.
+			 * It will also check if the line has no "="
+			 */
 			if (!isalpha(readline[i]) && !strstr(readline, "="))
 			{
+				/* Removes "[" and "]" to get the intent that is being read */
 				char *linePtr = strtok(readline, "[");
 				char *endLinePtr = strtok(linePtr, "]");
 
 				if (compare_token(endLinePtr, WHO) == 0)
-				{
 					readIntent = 0;
-				}
 				else if (compare_token(endLinePtr, WHAT) == 0)
-				{
 					readIntent = 1;
-				}
 				else if (compare_token(endLinePtr, WHERE) == 0)
-				{
 					readIntent = 2;
-				}
 				else if (compare_token(endLinePtr, WHEN) == 0)
-				{
 					readIntent = 3;
-				}
 				else if (compare_token(endLinePtr, WHY) == 0)
-				{
 					readIntent = 4;
-				}
 				else if (compare_token(endLinePtr, HOW) == 0)
-				{
 					readIntent = 5;
-				}
-			}
+			} 
+			/* Once intent is being read, next in line will be entity and reply.
+			This will search for "=". If it contains "=", then it is entity and reply */
 			else if (strrchr(readline, '='))
 			{
+				/* A pointer to point at the entity and the reply */
 				char *entity = strtok(readline, "=");
 				char *reply = strtok(NULL, "=");
 
+				/* Switch function is used to put each intent, followed by its entity and reply */
 				switch (readIntent)
 				{
-				case 0:
-					knowledge_put(WHO, entity, reply);
+				case 0: knowledge_put(WHO, entity, reply);
 					break;
-				case 1:
-					knowledge_put(WHAT, entity, reply);
+				case 1: knowledge_put(WHAT, entity, reply);
 					break;
-				case 2:
-					knowledge_put(WHERE, entity, reply);
+				case 2: knowledge_put(WHERE, entity, reply);
 					break;
-				case 3:
-					knowledge_put(WHEN, entity, reply);
+				case 3: knowledge_put(WHEN, entity, reply);
 					break;
-				case 4:
-					knowledge_put(WHY, entity, reply);
+				case 4: knowledge_put(WHY, entity, reply);
 					break;
-				case 5:
-					knowledge_put(HOW, entity, reply);
+				case 5: knowledge_put(HOW, entity, reply);
 					break;
 				default:
 					break;
@@ -278,11 +269,21 @@ void knowledge_write(FILE *f)
 	int occurence = 0;
 	ENTITY_PTR current = head;
 	while (current != NULL) {
+		/*
+		 * Traverse through the linked list.
+		 * Set the occurence to 0 means the intent has not appeared before.
+		 * If the intent has occured already, we will not print the intent again. 
+		 */
 		if (occurence == 0) {
 			fprintf(f, "[%s]\n", current->intent);
 		}
+		/* Add the entity and response into the file */
 		fprintf(f, "%s%s%s\n", current->entity, "=", current->response);
 		if (current->next != NULL) {
+			/*
+		   * If the next intent is not the same as the current one, set the occurence to 0. 
+			 * This is for the printing of the intent into the file
+		   */
 			if (compare_token(current->intent, current->next->intent) != 0) {
 				fprintf(f, "\n");
 				occurence = 0;
