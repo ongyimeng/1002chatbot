@@ -176,12 +176,13 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n)
 		}
 		else
 		{
+			fclose(f);
 			snprintf(response, n, "Sorry, file is not loaded. Please ensure that the file name or file exist.");
 		}
 	}else if (inc == 0){
+		fclose(f);
 		snprintf(response, n, "Sorry, file is not loaded. Please ensure that the file name or file exist.");
 	}
-
 	return 0;
 }
 
@@ -386,6 +387,7 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n)
 	f = fopen(fileName, "w");
 	knowledge_write(f);
 	snprintf(response, n, "Saved!");
+	fclose(f);
 	return 0;
 }
 

@@ -234,7 +234,7 @@ int knowledge_read(FILE *f)
 	}
 	if (readIntent >= 0 && readIntent <= 10)
 	{
-		return 0;
+		return KB_OK;
 	}
 	else
 	{
@@ -292,5 +292,5 @@ void knowledge_write(FILE *f)
 		}
 		current = current->next;
 	}
-	fclose(f);
+	// fclose(f);
 }
