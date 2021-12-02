@@ -1,0 +1,7 @@
+[what]
+the current temperature=30 degrees
+my email=abc@gmail.com
+my password=iloveict
+
+[where]
+do i stay=clementi
