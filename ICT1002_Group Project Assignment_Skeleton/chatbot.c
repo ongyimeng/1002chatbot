@@ -440,8 +440,8 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n)
 	} else if (compare_token(inv[0], "i") == 0 && compare_token(inv[1], "like") == 0) {
 		snprintf(response, n, "I like it too!");
 		return 0;
-	} else if (compare_token(inv[0], "are") == 0){
-		snprintf(response, n, "Unfortunately, I am just a bot...");
+	}else if (compare_token(inv[0], "are") == 0){
+		snprintf(response, n, "Of course I am!");
 		return 0;
 	}
 
