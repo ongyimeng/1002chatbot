@@ -42,7 +42,8 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	{
 		return KB_INVALID;
 	}
-	ENTITY_PTR current = head;
+	ENTITY_PTR current;
+	current = head;
 	while (current != NULL)
 	{
 		if (compare_token(current->intent, intent) == 0)
