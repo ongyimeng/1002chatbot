@@ -223,16 +223,21 @@ int chatbot_is_question(const char *intent)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	int index, find_entity, success = 0;
-	char *user_entity;
-	char *answer;
-	user_entity = (char *)malloc(MAX_ENTITY);
-	answer = (char *)malloc(MAX_RESPONSE);
+	// char *user_entity;
+	// char *answer;
+	// char *question;
+	// user_entity = (char *)malloc(MAX_ENTITY);
+	// answer = (char *)malloc(MAX_RESPONSE);
+	// question = (char *)malloc(MAX_RESPONSE);
+	char user_entity[MAX_ENTITY] = "";
+	char answer[MAX_RESPONSE] = "";
+	char question[MAX_RESPONSE] = "";
 	int try_put_knowledge;
 	// Check if the two char pointer were allocated space
-	if (user_entity == NULL || answer == NULL) {
-		snprintf(response, n, "Insufficient memory space");
-		return 1;
-	}
+	// if (user_entity == NULL || answer == NULL) {
+	// 	snprintf(response, n, "Insufficient memory space");
+	// 	return 1;
+	// }
 	/* 
 	Check if the sentence is more than a word. If yes, 
 	set the index to 2 (3rd word) to skip "is/are" which is the 2nd word.
@@ -244,7 +249,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		} else {
 			index = 1;
 		}
-		if (inv[index]) {
+		if (inv[index] != NULL) {
 			for (int i = index; i < inc; i++) {
 				strcat(user_entity, inv[i]);
 				// If current word is not the last word, add a space
@@ -263,7 +268,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	// If there was no record of that entity in the linked list
 	if (find_entity == KB_NOTFOUND) {
-		char *question = (char *)malloc(MAX_RESPONSE);
 		// Loop through the words in the original user prompt and add it to question variable to make a whole sentence. 				
 		for (int i = 0; i < index; i++) {
 			strcat(question, inv[i]);
@@ -305,9 +309,10 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		} else if (try_put_knowledge == KB_INVALID) {
 			snprintf(response, n, "Invalid intent specified");
 		}
-		free(question);
 	}
-	free(user_entity);
+	// free(question);
+	// free(user_entity);
+	// free(answer);
 	return 0;
 }
 

@@ -167,7 +167,6 @@ int knowledge_put(char *intent, char *entity, char *response)
  */
 int knowledge_read(FILE *f)
 {
-
 	char readline[MAX_RESPONSE + MAX_ENTITY];
 	char *entity;
 	char *reply;
